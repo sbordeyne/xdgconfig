@@ -1,4 +1,4 @@
-# PyConfig
+# XDGConfig
 
 Easy access to `~/.config`.
 
@@ -6,7 +6,7 @@ Easy access to `~/.config`.
 ## Usage
 
 ```python
-from pyconfig import JsonConfig
+from xdgconfig import JsonConfig
 
 # Instanciate the JsonConfig object
 # If you'd rather use a different format, there also are config classes
@@ -40,7 +40,7 @@ Look at the following example for an implementation guide.
 ```python
 from typing import Any, Dict
 
-from pyconfig import Config
+from xdgconfig import Config
 
 
 class MySerializer:

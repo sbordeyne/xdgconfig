@@ -1,7 +1,7 @@
 import itertools
 
 from setuptools import setup, find_packages
-from pyconfig import __version__
+from xdgconfig import __version__
 
 
 long_desc = ''
@@ -35,11 +35,11 @@ extras['all'] = [
 ]
 
 setup(
-    name='pyconfig',
+    name='xdgconfig',
     version=__version__,
     author='Dogeek',
     author_email='dogeek@users-noreply.github.com',
-    url='https://github.com/dogeek/pyconfig',
+    url='https://github.com/dogeek/xdgconfig',
     description='Easy access to `~/.config`',
     long_description=long_desc,
     long_description_content_type='text/markdown',
@@ -60,7 +60,7 @@ setup(
     zip_safe=True,
     platforms='any',
     python_requires='>=3.8',
-    download_url='https://github.com/dogeek/pyconfig/releases',
+    download_url='https://github.com/dogeek/xdgconfig/releases',
     extras_require=extras,
     keywords=['configuration', 'python3'],
 )

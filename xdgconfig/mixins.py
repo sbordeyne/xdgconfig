@@ -1,6 +1,6 @@
 import contextlib
 
-from pyconfig.serializers import json, ini
+from xdgconfig.serializers import json, ini
 
 
 __all__ = [
@@ -17,7 +17,7 @@ class IniMixin:
 
 
 with contextlib.suppress(ImportError):
-    from pyconfig.serializers import xml
+    from xdgconfig.serializers import xml
     __all__.append('XmlMixin')
 
     class XmlMixin:
@@ -26,7 +26,7 @@ with contextlib.suppress(ImportError):
 
 
 with contextlib.suppress(ImportError):
-    from pyconfig.serializers import toml
+    from xdgconfig.serializers import toml
     __all__.append('TomlMixin')
 
     class TomlMixin:
@@ -34,7 +34,7 @@ with contextlib.suppress(ImportError):
 
 
 with contextlib.suppress(ImportError):
-    from pyconfig.serializers import yaml
+    from xdgconfig.serializers import yaml
     __all__.append('YamlMixin')
 
     class YamlMixin:

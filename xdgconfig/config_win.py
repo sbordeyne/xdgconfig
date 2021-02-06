@@ -1,7 +1,7 @@
 import os
 import pathlib
 
-from pyconfig.config import Config
+from xdgconfig.config import Config
 
 
 class WinConfig(Config):

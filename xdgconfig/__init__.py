@@ -1,19 +1,19 @@
 # flake8: noqa
 from platform import system
 
-import pyconfig.mixins as mixins
+import xdgconfig.mixins as mixins
 
 
 __version__ = '0.0.2'
 
 
 if system() == 'Windows':
-    from pyconfig.config_win import WinConfig as Config
+    from xdgconfig.config_win import WinConfig as Config
 elif system() in ('Darwin', 'Linux') or system().startswith('CYGWIN'):
-    from pyconfig.config_unix import UnixConfig as Config
+    from xdgconfig.config_unix import UnixConfig as Config
 else:
     raise ImportError(
-        "PyConfig is not available on this platform : %s" % system()
+        "xdgconfig is not available on this platform : %s" % system()
     )
 
 
@@ -31,7 +31,7 @@ if hasattr(mixins, 'XmlMixin'):
 else:
     print((
         'xmltodict is not installed. '
-        'Run pip install pyconfig[xml] to install it.'
+        'Run pip install xdgconfig[xml] to install it.'
     ))
 
 if hasattr(mixins, 'YamlMixin'):
@@ -40,7 +40,7 @@ if hasattr(mixins, 'YamlMixin'):
 else:
     print((
         'PyYAML is not installed. '
-        'Run pip install pyconfig[yaml] to install it.'
+        'Run pip install xdgconfig[yaml] to install it.'
     ))
 
 if hasattr(mixins, 'TomlMixin'):
@@ -49,5 +49,5 @@ if hasattr(mixins, 'TomlMixin'):
 else:
     print((
         'TOML is not installed. '
-        'Run pip install pyconfig[toml] to install it.'
+        'Run pip install xdgconfig[toml] to install it.'
     ))
