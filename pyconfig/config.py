@@ -1,9 +1,15 @@
-from collections import defaultdict
 import pathlib
 from typing import Any
 
 
-class Config(dict):
+class defaultdict(dict):
+    def __getitem__(self, key: str) -> Any:
+        if key not in self:
+            self[key] = defaultdict()
+        return super().__getitem__(key)
+
+
+class Config(defaultdict):
     SERIALIZER = None
 
     def __init__(self, app_name: str, config_name: str = 'config', autosave: bool = True) -> None:
@@ -25,13 +31,11 @@ class Config(dict):
             super().__setitem__(key, value)
 
     def __setitem__(self, key: str, value: Any):
+        if isinstance(value, dict):
+            value = defaultdict(value)
         super().__setitem__(key, value)
         if self.autosave:
             self.save()
-
-    def __missing__(self, key: str) -> defaultdict:
-        print('missing : %s' % key)
-        return defaultdict(dict)
 
     @property
     def base_path(self) -> pathlib.Path:
@@ -67,4 +71,4 @@ class Config(dict):
             with open(self.config_path, 'r') as fp:
                 return self.SERIALIZER.loads(fp.read())
         except FileNotFoundError:
-            return {}
+            return defaultdict()
