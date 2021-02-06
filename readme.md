@@ -20,9 +20,9 @@ config['foo'] = 'bar'  # Save a value to the config
 print(config['foo'])
 
 # It behaves like a collections.defaultdict as well
-config['foo']['bar'] = 'baz'
+config['oof']['bar'] = 'baz'
 
-# Prints {'foo': {'bar': 'baz'}}
+# Prints {'oof': {'bar': 'baz'}, 'foo': 'bar'}
 print(config)
 
 ```
