@@ -14,6 +14,7 @@ extras = {
     'jsonc': ['commentjson>=0.9.0,<1'],
     'toml': ['toml>=0.10.2,<1'],
     'yaml': ['PyYAML>=5.4.1,<6'],
+    'xml': ['xmltodict>=0.12.0,<1'],
 }
 
 for k in range(2, len(extras) + 1):

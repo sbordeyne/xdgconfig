@@ -1,10 +1,10 @@
+import contextlib
 
-from pyconfig.serializers import json, ini, xml
+from pyconfig.serializers import json, ini
 
 
 __all__ = [
     'JsonMixin', 'IniMixin',
-    'XmlMixin',
 ]
 
 
@@ -16,27 +16,26 @@ class IniMixin:
     SERIALIZER = ini
 
 
-class XmlMixin:
-    SERIALIZER = xml
+with contextlib.suppress(ImportError):
+    from pyconfig.serializers import xml
+    __all__.append('XmlMixin')
+
+    class XmlMixin:
+        SERIALIZER = xml
 
 
-try:
+
+with contextlib.suppress(ImportError):
     from pyconfig.serializers import toml
     __all__.append('TomlMixin')
 
     class TomlMixin:
         SERIALIZER = toml
 
-except ImportError:
-    pass
 
-
-try:
+with contextlib.suppress(ImportError):
     from pyconfig.serializers import yaml
     __all__.append('YamlMixin')
 
     class YamlMixin:
         SERIALIZER = yaml
-
-except ImportError:
-    pass

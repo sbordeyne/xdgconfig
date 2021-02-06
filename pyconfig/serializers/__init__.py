@@ -13,7 +13,9 @@ import contextlib
 
 from pyconfig.serializers import _json as json
 from pyconfig.serializers import _configparser as ini
-from pyconfig.serializers import _xml as xml
+
+with contextlib.suppress(ImportError):
+    from pyconfig.serializers import _xml as xml
 
 with contextlib.suppress(ImportError):
     from pyconfig.serializers import _toml as toml

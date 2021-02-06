@@ -1,12 +1,5 @@
-try:
-    from lxml import etree
-except ImportError:
-    from xml.etree import ElementTree as etree
+from xmltodict import parse, unparse
 
 
-def loads(contents, **kw):  # noqa
-    ...
-
-
-def dumps(data, **kw):  # noqa
-    ...
+dumps = unparse
+loads = parse
