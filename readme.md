@@ -8,9 +8,11 @@ Easy access to `~/.config`.
 ```python
 from pyconfig import JsonConfig
 
-# Instanciate the Config object
+# Instanciate the JsonConfig object
+# If you'd rather use a different format, there also are config classes
+# for TOML, YAML, INI (configparser), and XML.
 # This will save your configuration under `~/.config/PROG/config
-config = Config('PROG', autosave=True)
+config = JsonConfig('PROG', autosave=True)
 
 config['foo'] = 'bar'  # Save a value to the config
 
