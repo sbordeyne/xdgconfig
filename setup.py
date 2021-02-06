@@ -61,4 +61,5 @@ setup(
     python_requires='>=3.8',
     download_url='https://github.com/dogeek/pyconfig/releases',
     extras_require=extras,
+    keywords=['configuration', 'python3'],
 )
