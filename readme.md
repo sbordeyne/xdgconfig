@@ -26,3 +26,36 @@ config['oof']['bar'] = 'baz'
 print(config)
 
 ```
+
+### Custom serializers
+
+You can add custom serializers support by using a Mixin class, as well as
+a serializer class which must have a `dumps` and a `loads` method, which will
+be used to store and load data from the config file. The data is always
+represented as a python `dict` object, but you can serialize any data you want
+inside of it.
+
+Look at the following example for an implementation guide.
+
+```python
+from typing import Any, Dict
+
+from pyconfig import Config
+
+
+class MySerializer:
+    def dumps(data: Dict[str, Any]) -> str:
+        return '\n'.join(f'{k}:{v}' for k, v in data.items())
+
+    def loads(contents: str) -> Dict[str, Any]:
+        return dict(s.split(':') for s in contents.split('\n'))
+
+
+class MySerializerMixin:
+    SERIALIZER = MySerializer
+
+
+class MyConfig(MySerializerMixin, Config):
+    ...
+
+```
