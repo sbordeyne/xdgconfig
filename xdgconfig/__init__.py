@@ -4,7 +4,7 @@ from platform import system
 import xdgconfig.mixins as mixins
 
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 
 if system() == 'Windows':
