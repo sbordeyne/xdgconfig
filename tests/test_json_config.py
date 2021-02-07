@@ -1,6 +1,6 @@
 import pathlib
 
-from pyconfig import JsonConfig
+from xdgconfig import JsonConfig
 from tests.utils import TestCase, MockMixin
 
 
@@ -15,7 +15,7 @@ class TestJsonConfig(TestCase):
         '''
         Tests that the config file is created correctly.
         '''
-        config = self.make_config(MockedJsonConfig)
+        config = self.make_config(MockedJsonConfig, name='saved')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -33,14 +33,14 @@ class TestJsonConfig(TestCase):
         )
         config.save()
         self.assertFileExists(
-            pathlib.Path('./tmp') / self.__class__.__name__ / self.CONFIG_NAME
+            pathlib.Path('./tmp') / self.__class__.__name__ / f'saved_{self.CONFIG_NAME}'
         )
 
     def test_config_loaded(self):
         '''
         Test that the config is loaded properly.
         '''
-        config = self.make_config(MockedJsonConfig)
+        config = self.make_config(MockedJsonConfig, 'load')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -48,7 +48,7 @@ class TestJsonConfig(TestCase):
         config['list'] = []
         config.save()
 
-        conf = self.make_config(MockedJsonConfig)
+        conf = self.make_config(MockedJsonConfig, 'load')
         self.assertEqual(
             conf,
             {
@@ -65,7 +65,7 @@ class TestJsonConfig(TestCase):
         Test that mutating a non-existing subkey generates the proper
         tree-like structure.
         '''
-        config = self.make_config(MockedJsonConfig)
+        config = self.make_config(MockedJsonConfig, 'mutating')
         config['foo']['bar'] = 'baz'
         self.assertEqual(
             config, {'foo': {'bar': 'baz'}}

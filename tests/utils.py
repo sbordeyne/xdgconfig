@@ -12,7 +12,8 @@ class MockMixin:
 class TestCase(unittest.TestCase):
     CONFIG_NAME = 'config'
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls):
         shutil.rmtree(pathlib.Path('./tmp'), ignore_errors=True)
 
     def assertFileExists(self, filepath: pathlib.Path) -> None:
@@ -20,9 +21,9 @@ class TestCase(unittest.TestCase):
             return
         raise AssertionError('File %s does not exist.' % filepath)
 
-    def make_config(self, klass):
+    def make_config(self, klass, name=''):
         return klass(
             self.__class__.__name__,
-            self.CONFIG_NAME,
+            f'{name}_{self.CONFIG_NAME}',
             autosave=False,
         )
