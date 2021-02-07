@@ -83,3 +83,6 @@ class TestJsonConfig(TestCase):
         '''
         config = self.make_config(MockedJsonConfig, 'identity')
         self.assertIs(config, self.make_config(MockedJsonConfig, 'identity'))
+        self.assertIsNot(
+            config, self.make_config(MockedJsonConfig, 'identity_false')
+        )

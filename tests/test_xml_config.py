@@ -80,3 +80,6 @@ class TestXmlConfig(TestCase):
         '''
         config = self.make_config(MockedXmlConfig, 'identity')
         self.assertIs(config, self.make_config(MockedXmlConfig, 'identity'))
+        self.assertIsNot(
+            config, self.make_config(MockedXmlConfig, 'identity_false')
+        )

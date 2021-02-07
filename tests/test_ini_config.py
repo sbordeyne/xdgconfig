@@ -80,3 +80,6 @@ class TestIniConfig(TestCase):
         '''
         config = self.make_config(MockedIniConfig, 'identity')
         self.assertIs(config, self.make_config(MockedIniConfig, 'identity'))
+        self.assertIsNot(
+            config, self.make_config(MockedIniConfig, 'identity_false')
+        )

@@ -81,3 +81,6 @@ class TestTomlConfig(TestCase):
         '''
         config = self.make_config(MockedTomlConfig, 'identity')
         self.assertIs(config, self.make_config(MockedTomlConfig, 'identity'))
+        self.assertIsNot(
+            config, self.make_config(MockedTomlConfig, 'identity_false')
+        )

@@ -80,3 +80,6 @@ class TestYamlConfig(TestCase):
         '''
         config = self.make_config(MockedYamlConfig, 'identity')
         self.assertIs(config, self.make_config(MockedYamlConfig, 'identity'))
+        self.assertIsNot(
+            config, self.make_config(MockedYamlConfig, 'identity_false')
+        )
