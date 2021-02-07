@@ -64,7 +64,7 @@ class MySerializer:
 
 
 class MySerializerMixin:
-    __SERIALIZER = MySerializer
+    _SERIALIZER = MySerializer
 
 
 class MyConfig(MySerializerMixin, Config):
