@@ -6,7 +6,7 @@ import unittest
 class MockMixin:
     @property
     def base_path(self):
-        return pathlib.Path('./tmp').resolve()
+        return pathlib.Path('./__tmp__').resolve()
 
 
 class TestCase(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestCase(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        shutil.rmtree(pathlib.Path('./tmp'), ignore_errors=True)
+        shutil.rmtree(pathlib.Path('./__tmp__'), ignore_errors=True)
 
     def assertFileExists(self, filepath: pathlib.Path) -> None:
         if filepath.exists():

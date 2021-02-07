@@ -10,10 +10,27 @@ class defaultdict(dict):
         return super().__getitem__(key)
 
 
-class Config(defaultdict):
+class ConfigMeta(type):
+    _instances = {}
+
+    def __call__(cls, *args, **kwargs):
+        for argname, arg in zip(('app_name', 'config_name'), args):
+            kwargs[argname] = arg
+        instance_name = kwargs['app_name'] + '.' + kwargs['config_name']
+        if instance_name not in cls._instances:
+            cls._instances[instance_name] = super(
+                ConfigMeta, cls
+            ).__call__(**kwargs)
+        return cls._instances[instance_name]
+
+
+class Config(defaultdict, metaclass=ConfigMeta):
     SERIALIZER = None
 
-    def __init__(self, app_name: str, config_name: str = 'config', autosave: bool = True) -> None:
+    def __init__(
+        self, app_name: str, config_name: str = 'config', *,
+        autosave: bool = True
+    ) -> None:
         '''
         An object representing a configuration for an application
 
@@ -21,7 +38,8 @@ class Config(defaultdict):
         :type name: str
         :param config_name: The name of the config file, defaults to 'config'
         :type config_name: str
-        :param autosave: Whether to autosave the config on mutation, defaults to True
+        :param autosave: Whether to autosave the config on mutation,
+                         defaults to True
         :type autosave: bool, optional
         '''
         self.app_name = app_name

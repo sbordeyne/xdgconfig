@@ -130,3 +130,7 @@ dmypy.json
 
 # VS Code
 .vscode/
+
+# Project specific ignores
+__tmp__
+xdgconfig-*/

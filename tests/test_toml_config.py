@@ -33,7 +33,11 @@ class TestTomlConfig(TestCase):
         )
         config.save()
         self.assertFileExists(
-            pathlib.Path('./tmp') / self.__class__.__name__ / f'saved_{self.CONFIG_NAME}'
+            (
+                pathlib.Path('./__tmp__') /
+                self.__class__.__name__ /
+                f'saved_{self.CONFIG_NAME}'
+            )
         )
 
 
@@ -68,3 +72,12 @@ class TestTomlConfig(TestCase):
         self.assertEqual(
             config, {'foo': {'bar': 'baz'}}
         )
+
+    def test_config_identity(self):
+        '''
+        Test that the config file's instance is cached in a Singleton-type
+        design pattern. Ensures limited memory footprint when working with
+        config files.
+        '''
+        config = self.make_config(MockedTomlConfig, 'identity')
+        self.assertIs(config, self.make_config(MockedTomlConfig, 'identity'))
