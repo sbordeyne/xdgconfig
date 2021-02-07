@@ -13,7 +13,7 @@ class UnixConfig(Config):
 
     def load(self):
         default_config_path = (
-            pathlib.Path('/etc') / self.app_name / self.config_name
+            pathlib.Path('/etc') / f'{self.app_name}.d' / self.config_name
         )
         data = {}
 

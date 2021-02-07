@@ -1,3 +1,4 @@
+import os
 import pathlib
 from typing import Any
 
@@ -69,6 +70,14 @@ class Config(defaultdict):
         '''
         try:
             with open(self.config_path, 'r') as fp:
-                return self.SERIALIZER.loads(fp.read())
+                data = self.SERIALIZER.loads(fp.read())
         except FileNotFoundError:
-            return defaultdict()
+            data = defaultdict()
+
+        # PROG_CONFIG_PATH environment variable can be used to point to
+        # a configuration file that will take precedence over the user config.
+        environ = os.getenv(f'{self.app_name.upper()}_CONFIG_PATH')
+        if environ and os.path.exists(environ):
+            with open(environ) as fp:
+                data.update(self.SERIALIZER.loads(fp.read()))
+        return data
