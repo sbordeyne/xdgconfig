@@ -1,3 +1,4 @@
+from copy import deepcopy
 import os
 import pathlib
 from typing import Any
@@ -75,8 +76,16 @@ class Config(defaultdict, metaclass=ConfigMeta):
         Saves the config to a file.
         '''
         self.config_path.parent.mkdir(parents=True, exist_ok=True)
+
+        def fix(data):
+            data_ = deepcopy(dict(data))
+            for k, v in data_.items():
+                if isinstance(v, defaultdict):
+                    data_[k] = dict(fix(v))
+            return data_
+
         with open(self.config_path, 'w') as fp:
-            data = self.SERIALIZER.dumps(dict(self.items()), indent=4)
+            data = self.SERIALIZER.dumps(fix(self), indent=4)
             fp.write(data)
 
     def load(self) -> dict:

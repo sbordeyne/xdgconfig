@@ -1,5 +1,5 @@
 import yaml as yaml_
 
 
-loads = yaml_.load
-dumps = yaml_.dump
+loads = yaml_.safe_load
+dumps = yaml_.safe_dump

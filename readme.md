@@ -3,6 +3,14 @@
 Easy access to `~/.config`.
 
 
+## Features
+
+- `Config` objects use a shared single reference.
+- Serializing to many common formats, including JSON, XML, TOML, YAML, and INI
+- `dict`-like interface
+- Autosaving on mutation of the `Config` object.
+
+
 ## Usage
 
 ```python
@@ -26,6 +34,8 @@ config['oof']['bar'] = 'baz'
 print(config)
 
 ```
+
+## Adding onto the library
 
 ### Custom serializers
 
