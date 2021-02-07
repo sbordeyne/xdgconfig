@@ -10,6 +10,38 @@ class defaultdict(dict):
             self[key] = defaultdict()
         return super().__getitem__(key)
 
+    def __getattr__(self, key: str) -> Any:
+        if key in self:
+            return self[key]
+        k = key.replace(' ', '_').replace("'", '')
+        if k in self:
+            return self[k]
+        return self.__getattribute__(key)
+
+    def __setattr__(self, key:str, value:Any) -> None:
+        if key in self:
+            self[key] = value
+        k = key.replace(' ', '_').replace("'", '')
+        if k in self:
+            self[k] = value
+        super().__setattr__(key, value)
+
+
+def fix(data: defaultdict) -> dict:
+    data_ = deepcopy(dict(data))
+    for k, v in data_.items():
+        if isinstance(v, defaultdict):
+            data_[k] = dict(fix(v))
+    return data_
+
+
+def unfix(data: dict) -> defaultdict:
+    data_ = deepcopy(dict(data))
+    for k, v in data_.items():
+        if isinstance(v, dict):
+            data_[k] = defaultdict(unfix(v))
+    return data_
+
 
 class ConfigMeta(type):
     _instances = {}
@@ -26,7 +58,7 @@ class ConfigMeta(type):
 
 
 class Config(defaultdict, metaclass=ConfigMeta):
-    SERIALIZER = None
+    _SERIALIZER = None
 
     def __init__(
         self, app_name: str, config_name: str = 'config', *,
@@ -43,22 +75,22 @@ class Config(defaultdict, metaclass=ConfigMeta):
                          defaults to True
         :type autosave: bool, optional
         '''
-        self.app_name = app_name
-        self.config_name = config_name
-        self.autosave = autosave
+        self._app_name = app_name
+        self._config_name = config_name
+        self._autosave = autosave
 
-        for key, value in self.load().items():
+        for key, value in self._load().items():
             super().__setitem__(key, value)
 
     def __setitem__(self, key: str, value: Any):
         if isinstance(value, dict):
             value = defaultdict(value)
         super().__setitem__(key, value)
-        if self.autosave:
-            self.save()
+        if self._autosave:
+            self._save()
 
     @property
-    def base_path(self) -> pathlib.Path:
+    def _base_path(self) -> pathlib.Path:
         '''
         Abstract method that returns the base path of the config directory
 
@@ -68,27 +100,20 @@ class Config(defaultdict, metaclass=ConfigMeta):
         raise NotImplementedError()
 
     @property
-    def config_path(self) -> pathlib.Path:
-        return self.base_path / self.app_name / self.config_name
+    def _config_path(self) -> pathlib.Path:
+        return self._base_path / self._app_name / self._config_name
 
-    def save(self) -> None:
+    def _save(self) -> None:
         '''
         Saves the config to a file.
         '''
-        self.config_path.parent.mkdir(parents=True, exist_ok=True)
+        self._config_path.parent.mkdir(parents=True, exist_ok=True)
 
-        def fix(data):
-            data_ = deepcopy(dict(data))
-            for k, v in data_.items():
-                if isinstance(v, defaultdict):
-                    data_[k] = dict(fix(v))
-            return data_
-
-        with open(self.config_path, 'w') as fp:
-            data = self.SERIALIZER.dumps(fix(self), indent=4)
+        with open(self._config_path, 'w') as fp:
+            data = self._SERIALIZER.dumps(fix(self), indent=4)
             fp.write(data)
 
-    def load(self) -> dict:
+    def _load(self) -> dict:
         '''
         Loads the config into memory
 
@@ -96,15 +121,15 @@ class Config(defaultdict, metaclass=ConfigMeta):
         :rtype: dict
         '''
         try:
-            with open(self.config_path, 'r') as fp:
-                data = self.SERIALIZER.loads(fp.read())
+            with open(self._config_path, 'r') as fp:
+                data = self._SERIALIZER.loads(fp.read())
         except FileNotFoundError:
             data = defaultdict()
 
         # PROG_CONFIG_PATH environment variable can be used to point to
         # a configuration file that will take precedence over the user config.
-        environ = os.getenv(f'{self.app_name.upper()}_CONFIG_PATH')
+        environ = os.getenv(f'{self._app_name.upper()}_CONFIG_PATH')
         if environ and os.path.exists(environ):
             with open(environ) as fp:
-                data.update(self.SERIALIZER.loads(fp.read()))
-        return data
+                data.update(self._SERIALIZER.loads(fp.read()))
+        return unfix(data)

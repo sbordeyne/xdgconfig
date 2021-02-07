@@ -5,7 +5,7 @@ import unittest
 
 class MockMixin:
     @property
-    def base_path(self):
+    def _base_path(self):
         return pathlib.Path('./__tmp__').resolve()
 
 

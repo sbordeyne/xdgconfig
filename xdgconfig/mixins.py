@@ -9,11 +9,11 @@ __all__ = [
 
 
 class JsonMixin:
-    SERIALIZER = json
+    _SERIALIZER = json
 
 
 class IniMixin:
-    SERIALIZER = ini
+    _SERIALIZER = ini
 
 
 with contextlib.suppress(ImportError):
@@ -21,7 +21,7 @@ with contextlib.suppress(ImportError):
     __all__.append('XmlMixin')
 
     class XmlMixin:
-        SERIALIZER = xml
+        _SERIALIZER = xml
 
 
 
@@ -30,7 +30,7 @@ with contextlib.suppress(ImportError):
     __all__.append('TomlMixin')
 
     class TomlMixin:
-        SERIALIZER = toml
+        _SERIALIZER = toml
 
 
 with contextlib.suppress(ImportError):
@@ -38,4 +38,4 @@ with contextlib.suppress(ImportError):
     __all__.append('YamlMixin')
 
     class YamlMixin:
-        SERIALIZER = yaml
+        _SERIALIZER = yaml

@@ -31,7 +31,7 @@ class TestYamlConfig(TestCase):
                 'list': []
             }
         )
-        config.save()
+        config._save()  # noqa
         self.assertFileExists(
             (
                 pathlib.Path('./__tmp__') /
@@ -47,7 +47,7 @@ class TestYamlConfig(TestCase):
         config['float'] = 0.1
         config['dict'] = {}
         config['list'] = []
-        config.save()
+        config._save()  # noqa
 
         conf = self.make_config(MockedYamlConfig, 'load')
         self.assertEqual(

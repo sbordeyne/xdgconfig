@@ -9,6 +9,8 @@ Easy access to `~/.config`.
 - Serializing to many common formats, including JSON, XML, TOML, YAML, and INI
 - `dict`-like interface
 - Autosaving on mutation of the `Config` object.
+- Accessing the config using dot notation (`config.key` for instance)
+  - Limitations : Don't use keys with a leading double underscore (dunder)
 
 
 ## Usage
@@ -62,7 +64,7 @@ class MySerializer:
 
 
 class MySerializerMixin:
-    SERIALIZER = MySerializer
+    __SERIALIZER = MySerializer
 
 
 class MyConfig(MySerializerMixin, Config):
