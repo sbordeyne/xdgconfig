@@ -32,8 +32,10 @@ Simply clone this repo and run `python3 setup.py install`.
 - Serializing to many common formats, including JSON, XML, TOML, YAML, and INI
 - `dict`-like interface
 - Autosaving on mutation of the `Config` object.
-- Accessing the config using dot notation (`config.key` for instance)
-  - Limitations : Don't use keys with a leading double underscore (dunder)
+- Smart config loading, especially on Unix-based platforms
+  - looks in `/etc/prog/config`, then in `~/.config/prog/config`
+  - Supports setting a config file path in an environment variable named `PROG_CONFIG_PATH`
+- Accessing the config using dot notation (`config.key` for instance). See limitations for guidance.
 
 
 ## Usage
