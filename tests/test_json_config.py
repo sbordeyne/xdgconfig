@@ -31,7 +31,7 @@ class TestJsonConfig(TestCase):
                 'list': []
             }
         )
-        config._save()  # noqa
+        config.save()
         self.assertFileExists(
             (
                 pathlib.Path('./__tmp__') /
@@ -50,7 +50,7 @@ class TestJsonConfig(TestCase):
         config['float'] = 0.1
         config['dict'] = {}
         config['list'] = []
-        config._save()  # noqa
+        config.save()
 
         conf = self.make_config(MockedJsonConfig, 'load')
         self.assertEqual(

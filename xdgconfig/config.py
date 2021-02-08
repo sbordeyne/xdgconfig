@@ -11,12 +11,16 @@ class defaultdict(dict):
         return super().__getitem__(key)
 
     def __getattr__(self, key: str) -> Any:
+        if key in self.__dict__:
+            return self.__getattribute__(key)
         if key in self:
             return self[key]
         k = key.replace(' ', '_').replace("'", '')
         if k in self:
             return self[k]
-        return self.__getattribute__(key)
+        raise AttributeError(
+            f'Attribute `{key}` does not exist on class `{type(self).__name__}`'
+        )
 
     def __setattr__(self, key:str, value:Any) -> None:
         if key in self:
@@ -87,7 +91,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
             value = defaultdict(value)
         super().__setitem__(key, value)
         if self._autosave:
-            self._save()
+            self.save()
 
     @property
     def _base_path(self) -> pathlib.Path:
@@ -103,7 +107,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
     def _config_path(self) -> pathlib.Path:
         return self._base_path / self._app_name / self._config_name
 
-    def _save(self) -> None:
+    def save(self) -> None:
         '''
         Saves the config to a file.
         '''
