@@ -15,6 +15,7 @@ extras = {
     'toml': ['toml>=0.10.2,<1'],
     'yaml': ['PyYAML>=5.4.1,<6'],
     'xml': ['xmltodict>=0.12.0,<1'],
+    'ini': ['mergedeep>=1.3.4,<2'],
 }
 
 for k in range(2, len(extras) + 1):
