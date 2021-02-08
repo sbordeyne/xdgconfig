@@ -3,6 +3,29 @@
 Easy access to `~/.config`.
 
 
+## Installation
+
+### Using pip
+
+Simply run `pip3 install --upgrade xdgconfig`.
+
+By default, `xdgconfig` only supports JSON as its serializer, but you can install support for
+other serializers by specifiying the format in square brackets, i.e. `pip3 install xdgconfig[xml]`.
+The following are available:
+
+- `jsonc`: JSON, with comments
+- `ini`: INI files
+- `xml`: eXtensible Markup Language files
+- `toml`: Tom's Markup language files
+- `yaml`: YAML Ain't Markup Language files
+
+Furthermore there is an `all` recipe to install support for every markup supported,
+and you can combine them by using a `+` between 2 targets, i.e. `pip3 install xdgconfig[xml+toml]`
+
+### From source
+
+Simply clone this repo and run `python3 setup.py install`.
+
 ## Features
 
 - `Config` objects use a shared single reference.
@@ -71,3 +94,12 @@ class MyConfig(MySerializerMixin, Config):
     ...
 
 ```
+
+
+## Known limitations
+
+- Using an `IniConfig` object prevents you from using periods (`.`) in key names, as they are separators for subdicts.
+- Methods and attributes of the `Config` object all start with a leading underscore (`_`), hence, using key names with the same convention is discouraged, as it could break the object due to the way dot (`.`) accessing works. The only exception is the `save` method, which doesn't start with a leading underscore.
+- There can only be one document per config file, and a config file is a dictionary.
+- Depending on the serializer used, some data types may or may not be available. You can circumvent that by using custom serializers.
+- Configuration files with comments will have their comments dropped when the configuration is saved.
