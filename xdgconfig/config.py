@@ -159,7 +159,7 @@ class LocalConfig(Config):
         autosave: bool = True
     ) -> None:
         super().__init__(
-            self._base_path.name,
+            '.' + self._base_path.name,
             config_name, autosave=autosave
         )
 
