@@ -1,9 +1,10 @@
 import configparser
 import io
 import json
-import re
 
 from mergedeep import merge
+
+from xdgconfig.utils import cast, path_to_dict
 
 
 __all__ = [
@@ -23,32 +24,6 @@ def _to_string(value):
     return str(value)
 
 def loads(contents, **kw):  # noqa
-    def cast(value):
-        if value in ('yes', 'no', 'true', 'false'):
-            return value in ('yes', 'true')
-        if value.isdigit():
-            return int(value)
-        if re.search(r'\d+\.\d+', value):
-            return float(value)
-        if value[2:].isdigit():
-            if value.startswith('0x'):
-                return int(value, base=16)
-            if value.startswith('0o'):
-                return int(value, base=8)
-            if value.startswith('0b'):
-                return int(value, base=2)
-        return value
-
-    def path_to_dict(path, option, value):
-        parts = path.split('.')
-
-        def pack(parts):
-            if parts:
-                return {parts[0]: pack(parts[1:])}
-            return {option: cast(value)}
-
-        return pack(parts)
-
     config = configparser.ConfigParser()
     config.read_string(contents)
 

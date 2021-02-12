@@ -3,6 +3,8 @@ import os
 import pathlib
 from typing import Any
 
+from xdgconfig.utils import cast
+
 
 class defaultdict(dict):
     def __getitem__(self, key: str) -> Any:
@@ -137,3 +139,15 @@ class Config(defaultdict, metaclass=ConfigMeta):
             with open(environ) as fp:
                 data.update(self._SERIALIZER.loads(fp.read()))
         return unfix(data)
+
+    def _cli_callback(
+        self, config_key: str, config_value: str,
+        _global: bool = False, infer_type: bool = True,
+    ) -> int:
+        if not _global:
+            return self._local._cli_callback(config_key, config_value)  # noqa
+
+        if infer_type:
+            config_value = cast(config_value)
+        self[config_key] = config_value
+        return 0
