@@ -1,21 +1,17 @@
 import pathlib
 
-from xdgconfig import JsonConfig
-from tests.utils import TestCase, MockMixin
+from tests.utils import TestCase
+from tests.mocks import MockedTomlConfig
 
 
-class MockedJsonConfig(MockMixin, JsonConfig):
-    ...
-
-
-class TestJsonConfig(TestCase):
-    CONFIG_NAME = 'config.json'
+class TestTomlConfig(TestCase):
+    CONFIG_NAME = 'config.toml'
 
     def test_config_saved(self):
         '''
         Tests that the config file is created correctly.
         '''
-        config = self.make_config(MockedJsonConfig, name='saved')
+        config = self.make_config(MockedTomlConfig, 'saved')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -40,11 +36,9 @@ class TestJsonConfig(TestCase):
             )
         )
 
+
     def test_config_loaded(self):
-        '''
-        Test that the config is loaded properly.
-        '''
-        config = self.make_config(MockedJsonConfig, 'load')
+        config = self.make_config(MockedTomlConfig, 'load')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -52,7 +46,7 @@ class TestJsonConfig(TestCase):
         config['list'] = []
         config.save()
 
-        conf = self.make_config(MockedJsonConfig, 'load')
+        conf = self.make_config(MockedTomlConfig, 'load')
         self.assertEqual(
             conf,
             {
@@ -69,7 +63,7 @@ class TestJsonConfig(TestCase):
         Test that mutating a non-existing subkey generates the proper
         tree-like structure.
         '''
-        config = self.make_config(MockedJsonConfig, 'mutating')
+        config = self.make_config(MockedTomlConfig, 'mutating')
         config['foo']['bar'] = 'baz'
         self.assertEqual(
             config, {'foo': {'bar': 'baz'}}
@@ -81,8 +75,8 @@ class TestJsonConfig(TestCase):
         design pattern. Ensures limited memory footprint when working with
         config files.
         '''
-        config = self.make_config(MockedJsonConfig, 'identity')
-        self.assertIs(config, self.make_config(MockedJsonConfig, 'identity'))
+        config = self.make_config(MockedTomlConfig, 'identity')
+        self.assertIs(config, self.make_config(MockedTomlConfig, 'identity'))
         self.assertIsNot(
-            config, self.make_config(MockedJsonConfig, 'identity_false')
+            config, self.make_config(MockedTomlConfig, 'identity_false')
         )

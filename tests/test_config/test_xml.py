@@ -1,11 +1,7 @@
 import pathlib
 
-from xdgconfig import XmlConfig
-from tests.utils import TestCase, MockMixin
-
-
-class MockedXmlConfig(MockMixin, XmlConfig):
-    ...
+from tests.utils import TestCase
+from tests.mocks import MockedXmlConfig
 
 
 class TestXmlConfig(TestCase):

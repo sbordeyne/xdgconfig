@@ -1,21 +1,17 @@
 import pathlib
 
-from xdgconfig import IniConfig
-from tests.utils import TestCase, MockMixin
+from tests.utils import TestCase
+from tests.mocks import MockedJsonConfig
 
 
-class MockedIniConfig(MockMixin, IniConfig):
-    ...
-
-
-class TestIniConfig(TestCase):
-    CONFIG_NAME = 'config.ini'
+class TestJsonConfig(TestCase):
+    CONFIG_NAME = 'config.json'
 
     def test_config_saved(self):
         '''
         Tests that the config file is created correctly.
         '''
-        config = self.make_config(MockedIniConfig, 'saved')
+        config = self.make_config(MockedJsonConfig, name='saved')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -41,7 +37,10 @@ class TestIniConfig(TestCase):
         )
 
     def test_config_loaded(self):
-        config = self.make_config(MockedIniConfig, 'load')
+        '''
+        Test that the config is loaded properly.
+        '''
+        config = self.make_config(MockedJsonConfig, 'load')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -49,7 +48,7 @@ class TestIniConfig(TestCase):
         config['list'] = []
         config.save()
 
-        conf = self.make_config(MockedIniConfig, 'load')
+        conf = self.make_config(MockedJsonConfig, 'load')
         self.assertEqual(
             conf,
             {
@@ -66,7 +65,7 @@ class TestIniConfig(TestCase):
         Test that mutating a non-existing subkey generates the proper
         tree-like structure.
         '''
-        config = self.make_config(MockedIniConfig, 'mutating')
+        config = self.make_config(MockedJsonConfig, 'mutating')
         config['foo']['bar'] = 'baz'
         self.assertEqual(
             config, {'foo': {'bar': 'baz'}}
@@ -78,8 +77,8 @@ class TestIniConfig(TestCase):
         design pattern. Ensures limited memory footprint when working with
         config files.
         '''
-        config = self.make_config(MockedIniConfig, 'identity')
-        self.assertIs(config, self.make_config(MockedIniConfig, 'identity'))
+        config = self.make_config(MockedJsonConfig, 'identity')
+        self.assertIs(config, self.make_config(MockedJsonConfig, 'identity'))
         self.assertIsNot(
-            config, self.make_config(MockedIniConfig, 'identity_false')
+            config, self.make_config(MockedJsonConfig, 'identity_false')
         )

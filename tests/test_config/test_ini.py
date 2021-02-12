@@ -1,21 +1,17 @@
 import pathlib
 
-from xdgconfig import YamlConfig
-from tests.utils import TestCase, MockMixin
+from tests.utils import TestCase
+from tests.mocks import MockedIniConfig
 
 
-class MockedYamlConfig(MockMixin, YamlConfig):
-    ...
-
-
-class TestYamlConfig(TestCase):
-    CONFIG_NAME = 'config.yaml'
+class TestIniConfig(TestCase):
+    CONFIG_NAME = 'config.ini'
 
     def test_config_saved(self):
         '''
         Tests that the config file is created correctly.
         '''
-        config = self.make_config(MockedYamlConfig, 'saved')
+        config = self.make_config(MockedIniConfig, 'saved')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -41,7 +37,7 @@ class TestYamlConfig(TestCase):
         )
 
     def test_config_loaded(self):
-        config = self.make_config(MockedYamlConfig, 'load')
+        config = self.make_config(MockedIniConfig, 'load')
         config['string'] = 'string'
         config['integer'] = 0
         config['float'] = 0.1
@@ -49,7 +45,7 @@ class TestYamlConfig(TestCase):
         config['list'] = []
         config.save()
 
-        conf = self.make_config(MockedYamlConfig, 'load')
+        conf = self.make_config(MockedIniConfig, 'load')
         self.assertEqual(
             conf,
             {
@@ -66,7 +62,7 @@ class TestYamlConfig(TestCase):
         Test that mutating a non-existing subkey generates the proper
         tree-like structure.
         '''
-        config = self.make_config(MockedYamlConfig, 'mutating')
+        config = self.make_config(MockedIniConfig, 'mutating')
         config['foo']['bar'] = 'baz'
         self.assertEqual(
             config, {'foo': {'bar': 'baz'}}
@@ -78,8 +74,8 @@ class TestYamlConfig(TestCase):
         design pattern. Ensures limited memory footprint when working with
         config files.
         '''
-        config = self.make_config(MockedYamlConfig, 'identity')
-        self.assertIs(config, self.make_config(MockedYamlConfig, 'identity'))
+        config = self.make_config(MockedIniConfig, 'identity')
+        self.assertIs(config, self.make_config(MockedIniConfig, 'identity'))
         self.assertIsNot(
-            config, self.make_config(MockedYamlConfig, 'identity_false')
+            config, self.make_config(MockedIniConfig, 'identity_false')
         )
