@@ -2,7 +2,7 @@ import re
 from typing import Any, Dict, Union
 
 
-def cast(value: str) -> Union[bool, int, float, str]:
+def cast(value: str) -> Any:
     if value in ('yes', 'no', 'true', 'false'):
         return value in ('yes', 'true')
     if value.isdigit():

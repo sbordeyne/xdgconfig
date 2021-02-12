@@ -16,13 +16,23 @@ else:
         "xdgconfig is not available on this platform : %s" % system()
     )
 
+from xdgconfig.config import LocalConfig
+
 
 class JsonConfig(mixins.JsonMixin, Config):
     ...
 
 
+class LocalJsonConfig(mixins.JsonMixin, LocalConfig):
+    ...
+
+
 if hasattr(mixins, 'IniMixin'):
     class IniConfig(mixins.IniMixin, Config):
+        ...
+
+
+    class LocalIniConfig(mixins.IniMixin, LocalConfig):
         ...
 else:
     print((
@@ -33,6 +43,10 @@ else:
 if hasattr(mixins, 'XmlMixin'):
     class XmlConfig(mixins.XmlMixin, Config):
         ...
+
+
+    class LocalXmlConfig(mixins.XmlMixin, LocalConfig):
+        ...
 else:
     print((
         'xmltodict is not installed. '
@@ -42,6 +56,10 @@ else:
 if hasattr(mixins, 'YamlMixin'):
     class YamlConfig(mixins.YamlMixin, Config):
         ...
+
+
+    class LocalYamlConfig(mixins.YamlMixin, LocalConfig):
+        ...
 else:
     print((
         'PyYAML is not installed. '
@@ -50,6 +68,10 @@ else:
 
 if hasattr(mixins, 'TomlMixin'):
     class TomlConfig(mixins.TomlMixin, Config):
+        ...
+
+
+    class LocalTomlConfig(mixins.TomlMixin, LocalConfig):
         ...
 else:
     print((

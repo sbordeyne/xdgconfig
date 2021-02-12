@@ -151,3 +151,18 @@ class Config(defaultdict, metaclass=ConfigMeta):
             config_value = cast(config_value)
         self[config_key] = config_value
         return 0
+
+
+class LocalConfig(Config):
+    def __init__(
+        self, config_name: str = 'config', *,
+        autosave: bool = True
+    ) -> None:
+        super().__init__(
+            self._base_path.name,
+            config_name, autosave=autosave
+        )
+
+    @property
+    def _base_path(self):
+        return pathlib.Path.cwd().resolve()
