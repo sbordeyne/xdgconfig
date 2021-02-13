@@ -1,52 +1,9 @@
-from copy import deepcopy
 import os
 import pathlib
 from typing import Any
 
-from xdgconfig.utils import cast
-
-
-class defaultdict(dict):
-    def __getitem__(self, key: str) -> Any:
-        if key not in self:
-            self[key] = defaultdict()
-        return super().__getitem__(key)
-
-    def __getattr__(self, key: str) -> Any:
-        if key in self.__dict__:
-            return self.__getattribute__(key)
-        if key in self:
-            return self[key]
-        k = key.replace(' ', '_').replace("'", '')
-        if k in self:
-            return self[k]
-        raise AttributeError(
-            f'Attribute `{key}` does not exist on class `{type(self).__name__}`'
-        )
-
-    def __setattr__(self, key:str, value:Any) -> None:
-        if key in self:
-            self[key] = value
-        k = key.replace(' ', '_').replace("'", '')
-        if k in self:
-            self[k] = value
-        super().__setattr__(key, value)
-
-
-def fix(data: defaultdict) -> dict:
-    data_ = deepcopy(dict(data))
-    for k, v in data_.items():
-        if isinstance(v, defaultdict):
-            data_[k] = dict(fix(v))
-    return data_
-
-
-def unfix(data: dict) -> defaultdict:
-    data_ = deepcopy(dict(data))
-    for k, v in data_.items():
-        if isinstance(v, dict):
-            data_[k] = defaultdict(unfix(v))
-    return data_
+from xdgconfig.utils import cast, default_to_dict, dict_to_default
+from xdgconfig.defaultdict import defaultdict
 
 
 class ConfigMeta(type):
@@ -90,7 +47,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
 
     def __setitem__(self, key: str, value: Any):
         if isinstance(value, dict):
-            value = defaultdict(value)
+            value = defaultdict(value, __parent=self)
         super().__setitem__(key, value)
         if self._autosave:
             self.save()
@@ -116,7 +73,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
         self._config_path.parent.mkdir(parents=True, exist_ok=True)
 
         with open(self._config_path, 'w') as fp:
-            data = self._SERIALIZER.dumps(fix(self), indent=4)
+            data = self._SERIALIZER.dumps(default_to_dict(self), indent=4)
             fp.write(data)
 
     def _load(self) -> dict:
@@ -130,7 +87,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
             with open(self._config_path, 'r') as fp:
                 data = self._SERIALIZER.loads(fp.read())
         except FileNotFoundError:
-            data = defaultdict()
+            data = defaultdict(__parent=self)
 
         # PROG_CONFIG_PATH environment variable can be used to point to
         # a configuration file that will take precedence over the user config.
@@ -138,7 +95,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
         if environ and os.path.exists(environ):
             with open(environ) as fp:
                 data.update(self._SERIALIZER.loads(fp.read()))
-        return unfix(data)
+        return dict_to_default(data)
 
     def _cli_callback(
         self, config_key: str, config_value: str,

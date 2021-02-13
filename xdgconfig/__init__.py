@@ -27,18 +27,13 @@ class LocalJsonConfig(mixins.JsonMixin, LocalConfig):
     ...
 
 
-if hasattr(mixins, 'IniMixin'):
-    class IniConfig(mixins.IniMixin, Config):
-        ...
+class IniConfig(mixins.IniMixin, Config):
+    ...
 
 
-    class LocalIniConfig(mixins.IniMixin, LocalConfig):
-        ...
-else:
-    print((
-        'mergedeep is not installed. '
-        'Run pip install xdgconfig[ini] to install it.'
-    ))
+class LocalIniConfig(mixins.IniMixin, LocalConfig):
+    ...
+
 
 if hasattr(mixins, 'XmlMixin'):
     class XmlConfig(mixins.XmlMixin, Config):

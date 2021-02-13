@@ -1,5 +1,8 @@
+from copy import deepcopy
 import re
-from typing import Any, Dict, Union
+from typing import Any, Dict
+
+from xdgconfig.defaultdict import defaultdict
 
 
 def cast(value: str) -> Any:
@@ -28,3 +31,19 @@ def path_to_dict(path: str, option: str, value: str) -> Dict[str, Any]:
         return {option: cast(value)}
 
     return pack(parts)
+
+
+def default_to_dict(data: defaultdict) -> dict:
+    data_ = deepcopy(dict(data))
+    for k, v in data_.items():
+        if isinstance(v, defaultdict):
+            data_[k] = dict(default_to_dict(v))
+    return data_
+
+
+def dict_to_default(data: dict) -> defaultdict:
+    data_ = deepcopy(dict(data))
+    for k, v in data_.items():
+        if isinstance(v, dict):
+            data_[k] = defaultdict(dict_to_default(v))
+    return data_
