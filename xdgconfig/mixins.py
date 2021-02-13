@@ -1,10 +1,10 @@
 import contextlib
 
-from xdgconfig.serializers import json
+from xdgconfig.serializers import ini, json
 
 
 __all__ = [
-    'JsonMixin',
+    'JsonMixin', 'IniMixin',
 ]
 
 
@@ -12,11 +12,8 @@ class JsonMixin:
     _SERIALIZER = json
 
 
-with contextlib.suppress(ImportError):
-    from xdgconfig.serializers import ini
-    __all__.append('IniMixin')
-    class IniMixin:
-        _SERIALIZER = ini
+class IniMixin:
+    _SERIALIZER = ini
 
 
 with contextlib.suppress(ImportError):
@@ -25,7 +22,6 @@ with contextlib.suppress(ImportError):
 
     class XmlMixin:
         _SERIALIZER = xml
-
 
 
 with contextlib.suppress(ImportError):

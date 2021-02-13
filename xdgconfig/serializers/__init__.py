@@ -12,8 +12,7 @@ exactly like the `indent` keyword argument in the `json` module.
 import contextlib
 
 from xdgconfig.serializers import _json as json
-with contextlib.suppress(ImportError):
-    from xdgconfig.serializers import _configparser as ini
+from xdgconfig.serializers import _configparser as ini
 
 with contextlib.suppress(ImportError):
     from xdgconfig.serializers import _xml as xml

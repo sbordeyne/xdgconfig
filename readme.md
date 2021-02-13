@@ -97,6 +97,50 @@ class MyConfig(MySerializerMixin, Config):
 
 ```
 
+### Setting default values
+
+You can set default values by creating a `Mixin` class with a `_DEFAULTS` class attribute, such as :
+
+```python
+from pathlib import Path
+from pprint import pprint
+
+from xdgconfig import JsonConfig
+
+
+class DefaultConfig:
+    _DEFAULTS = {
+        'logger.level': 'info',
+        'logger.verbosity': 3,
+        'app.path': str(Path.cwd()),
+        'app.credentials.username': 'user',
+        'app.credentials.password': 'password',
+    }
+
+
+class Config(DefaultConfig, JsonConfig):
+    ...
+
+
+config = Config('PROG', 'config.json')
+pprint(config)
+# Prints the following dict :
+# {
+#     'logger': {
+#         'level': 'info',
+#         'verbosity': 3
+#     },
+#     'app': {
+#         'path': '$CWD',
+#         'credentials': {
+#             'username': 'user',
+#             'password': 'password'
+#         }
+#     }
+# }
+
+```
+
 
 ## Known limitations
 

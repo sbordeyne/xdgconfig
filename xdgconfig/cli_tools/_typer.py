@@ -14,7 +14,6 @@ def config(
     _global: bool = typer.Option(False, '--global'),
 ):
     config = context.default_map.get('config')
-    print(f'{config=}')
     infer_type = context.default_map.get('infer_type', True)
 
     if config is None:

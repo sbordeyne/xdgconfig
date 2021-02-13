@@ -4,7 +4,7 @@ import json
 
 from mergedeep import merge
 
-from xdgconfig.utils import cast, path_to_dict
+from xdgconfig.utils import path_to_dict
 
 
 __all__ = [
@@ -30,10 +30,13 @@ def loads(contents, **kw):  # noqa
     data = {}
     for section in config.sections():
         for option in config.options(section):
-            merge(data, path_to_dict(section, option, config.get(section, option)))
-
-    print(f'{data=}')
-
+            merge(
+                data,
+                path_to_dict(
+                    section, option,
+                    config.get(section, option)
+                )
+            )
     return data
 
 
