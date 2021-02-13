@@ -37,9 +37,6 @@ def loads(contents, **kw):  # noqa
                     config.get(section, option)
                 )
             )
-
-    print(f'{data=}')
-
     return data
 
 

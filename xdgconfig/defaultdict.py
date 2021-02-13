@@ -5,15 +5,15 @@ from typing import Any
 class defaultdict(dict):
     _DEFAULTS = {}
 
-    def __init__(self, *args, __parent=None, **kwargs):
-        self.__parent = __parent or kwargs.pop('__parent', None)
+    def __init__(self, *args, _parent=None, **kwargs):
+        self._parent = _parent or kwargs.pop('_parent', None)
         super().__init__(*args, **kwargs)
 
     def __getitem__(self, key: str) -> Any:
         if key not in self and '.' not in key:
-            default = self.__default
+            default = self._default
             if isinstance(default, dict):
-                default = defaultdict(default, __parent=self)
+                default = defaultdict(default, _parent=self)
             self[key] = default
         if '.' in key:
             return self['.'.join(key.split('.')[1:])]
@@ -40,14 +40,25 @@ class defaultdict(dict):
         super().__setattr__(key, value)
 
     @property
-    def __rootpath(self):
+    def _rootpath(self):
         path = [self]
-        while path[-1].__parent is not None:
-            path.append(path[-1].__parent)
-        return '.'.join(reversed(path))
+        strpath = []
+        while path[-1]._parent is not None:
+            path.append(path[-1]._parent)
+        path = list(reversed(path))
+        for i in range(len(path) - 1):
+            dd = path[i]
+            for k, v in dd.items():
+                if path[i + 1] == v:
+                    key = k
+                    break
+            else:
+                raise Exception()
+            strpath.append(key)
+        return '.'.join(strpath)
 
     @property
-    def __default(self) -> Any:
+    def _default(self) -> Any:
         return self._DEFAULTS.get(
-            self.__rootpath, defaultdict(__parent=self)
+            self._rootpath, defaultdict(_parent=self)
         )

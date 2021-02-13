@@ -41,13 +41,14 @@ class Config(defaultdict, metaclass=ConfigMeta):
         self._app_name = app_name
         self._config_name = config_name
         self._autosave = autosave
+        self._parent = None
 
         for key, value in self._load().items():
             super().__setitem__(key, value)
 
     def __setitem__(self, key: str, value: Any):
         if isinstance(value, dict):
-            value = defaultdict(value, __parent=self)
+            value = defaultdict(value, _parent=self)
         super().__setitem__(key, value)
         if self._autosave:
             self.save()
@@ -87,7 +88,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
             with open(self._config_path, 'r') as fp:
                 data = self._SERIALIZER.loads(fp.read())
         except FileNotFoundError:
-            data = defaultdict(__parent=self)
+            data = defaultdict(_parent=self)
 
         # PROG_CONFIG_PATH environment variable can be used to point to
         # a configuration file that will take precedence over the user config.
