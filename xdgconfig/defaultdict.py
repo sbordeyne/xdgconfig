@@ -1,19 +1,28 @@
-from copy import deepcopy
 from typing import Any
 
 
 class defaultdict(dict):
     _DEFAULTS = {}
 
-    def __init__(self, *args, _parent=None, **kwargs):
-        self._parent = _parent or kwargs.pop('_parent', None)
+    def __init__(self, *args, **kwargs):
+        parent = kwargs.pop('_parent', None)
+        defaults = kwargs.pop('_defaults', {})
         super().__init__(*args, **kwargs)
+        self._parent = parent
+        self._DEFAULTS = defaults
 
     def __getitem__(self, key: str) -> Any:
         if key not in self and '.' not in key:
-            default = self._default
+            default = self._default(key)
             if isinstance(default, dict):
-                default = defaultdict(default, _parent=self)
+                if self._parent is not None:
+                    parent = f'{self._parent}.{key}'
+                else:
+                    parent = key
+                default = defaultdict(
+                    default, _parent=parent,
+                    _defaults=self._DEFAULTS,
+                )
             self[key] = default
         if '.' in key:
             return self['.'.join(key.split('.')[1:])]
@@ -39,26 +48,13 @@ class defaultdict(dict):
             self[k] = value
         super().__setattr__(key, value)
 
-    @property
-    def _rootpath(self):
-        path = [self]
-        strpath = []
-        while path[-1]._parent is not None:
-            path.append(path[-1]._parent)
-        path = list(reversed(path))
-        for i in range(len(path) - 1):
-            dd = path[i]
-            for k, v in dd.items():
-                if path[i + 1] == v:
-                    key = k
-                    break
-            else:
-                raise Exception()
-            strpath.append(key)
-        return '.'.join(strpath)
-
-    @property
-    def _default(self) -> Any:
+    def _default(self, key: str) -> Any:
+        if self._parent:
+            path = f'{self._parent}.{key}'
+        else:
+            path = key
         return self._DEFAULTS.get(
-            self._rootpath, defaultdict(_parent=self)
+            path, defaultdict(
+                _parent=path, _defaults=self._DEFAULTS,
+            )
         )
