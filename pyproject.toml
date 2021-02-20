@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "xdgconfig"
+version = "0.4.2"
+description = "Easy access to `~/.config`"
+authors = ["Dogeek <Dogeek@users.noreply.github.com>"]
+license = "MIT"
+readme = "readme.md"
+classifiers = [
+    'Development Status :: 4 - Beta',
+    'Intended Audience :: Developers',
+    'License :: OSI Approved :: MIT License',
+    'Operating System :: POSIX',
+    'Operating System :: Microsoft :: Windows',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.7',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Topic :: Software Development :: Libraries',
+]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+mergedeep = "^1.3.4"
+
+[tool.poetry.dev-dependencies]
+commentjson = "^0.9.0"
+toml = "^0.10.2"
+PyYAML = "^5.4.1"
+xmltodict = "^0.12.0"
+lxml = "^4.6.2"
+
+[tool.poetry.extras]
+jsonc = ["commentjson"]
+toml = ["toml"]
+yaml = ["PyYAML"]
+xml = ["xmltodict", "lxml"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
