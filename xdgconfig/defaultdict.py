@@ -5,6 +5,16 @@ class defaultdict(dict):
     _DEFAULTS = {}
 
     def __init__(self, *args, **kwargs):
+        '''
+        A defaultdict which recursively replace dicts inside with itself.
+        Supports a `_DEFAULTS` class attribute to specify defaults for each key.
+
+        :param parent: The parent key. Defaults to None
+        :type parent: str, optional
+        :param defaults: The defaults to assign to the `_DEFAULTS`
+                         class attribute. Defaults to dict().
+        :type defaults: dict, optional
+        '''
         parent = kwargs.pop('_parent', None)
         defaults = kwargs.pop('_defaults', {})
         super().__init__(*args, **kwargs)
@@ -29,6 +39,14 @@ class defaultdict(dict):
         return super().__getitem__(key)
 
     def _default(self, key: str) -> Any:
+        '''
+        Returns the default value for a given key.
+
+        :param key: The key to get the default value of.
+        :type key: str
+        :return: The default value associated with the key
+        :rtype: Any
+        '''
         if self._parent:
             path = f'{self._parent}.{key}'
         else:

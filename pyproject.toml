@@ -28,6 +28,9 @@ toml = "^0.10.2"
 PyYAML = "^5.4.1"
 xmltodict = "^0.12.0"
 lxml = "^4.6.2"
+recommonmark = "^0.7.1"
+Sphinx = "^3.5.1"
+sphinx-rtd-theme = "^0.5.1"
 
 [tool.poetry.extras]
 jsonc = ["commentjson"]
