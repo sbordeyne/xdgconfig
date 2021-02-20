@@ -38,10 +38,13 @@ class Config(defaultdict, metaclass=ConfigMeta):
                          defaults to True
         :type autosave: bool, optional
         '''
+
         self._app_name = app_name
         self._config_name = config_name
         self._autosave = autosave
         self._parent = None
+        self._local = LocalConfig()
+        self._local._SERIALIZER = self._SERIALIZER
 
         for key, value in self._load().items():
             super().__setitem__(key, value)
