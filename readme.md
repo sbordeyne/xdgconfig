@@ -1,5 +1,10 @@
 # XDGConfig
 
+[![Discord](https://img.shields.io/discord/812645240611536906?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/kDgyr9Uzwj)
+[![GitHub license](https://img.shields.io/github/license/Dogeek/xdgconfig.svg)](https://github.com/Dogeek/xdgconfig/blob/master/LICENSE)
+[![PyPI version shields.io](https://img.shields.io/pypi/v/xdgconfig.svg)](https://pypi.python.org/pypi/xdgconfig/)
+[![PyPI pyversions](https://img.shields.io/pypi/pyversions/xdgconfig.svg)](https://pypi.python.org/pypi/xdgconfig/)
+
 Easy access to `~/.config`.
 
 
