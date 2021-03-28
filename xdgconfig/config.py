@@ -1,9 +1,13 @@
+import datetime
 import os
 import pathlib
 from typing import Any
 
 from xdgconfig.utils import cast, default_to_dict, dict_to_default
 from xdgconfig.defaultdict import defaultdict
+from xdgconfig.plugin import Plugin
+from xdgconfig.git import Git
+from xdgconfig.exceptions import GitNotFound
 
 
 __all__ = ('Config', 'LocalConfig')
@@ -49,6 +53,8 @@ class Config(defaultdict, metaclass=ConfigMeta):
         self._local = LocalConfig()
         self._local._SERIALIZER = self._SERIALIZER
 
+        self.plugins = []
+
         for key, value in self._load().items():
             super().__setitem__(key, value)
 
@@ -70,19 +76,56 @@ class Config(defaultdict, metaclass=ConfigMeta):
         raise NotImplementedError()
 
     @property
-    def _config_path(self) -> pathlib.Path:
+    def is_git_repo(self):
+        return (self.app_path / '.git').exists()
+
+    @property
+    def app_path(self) -> pathlib.Path:
+        '''Returns the path to the app's config directory'''
+        return self._base_path / self._app_name
+
+    @property
+    def config_path(self) -> pathlib.Path:
         '''Returns the path to the config file'''
-        return self._base_path / self._app_name / self._config_name
+        return self.app_path / self._config_name
 
     def save(self) -> None:
         '''
         Saves the config to a file.
         '''
-        self._config_path.parent.mkdir(parents=True, exist_ok=True)
+        self.config_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(self._config_path, 'w') as fp:
+        with open(self.config_path, 'w') as fp:
             data = self._SERIALIZER.dumps(default_to_dict(self), indent=4)
             fp.write(data)
+
+        if self.is_git_repo:
+            self.commit_changes()
+
+    def commit_changes(self, push=True) -> None:
+        '''
+        Commit the changes to the config to a repo,
+        push if a remote is available
+
+        :param push: Whether to push to a remote, if available. Defaults to True.
+        '''
+        date: str = datetime.datetime.now().strftime('%Y-%m-%d')
+        message: str = f'[{date}] Committing changes.'
+        try:
+            git = Git(self.app_path)
+        except GitNotFound:
+            return
+
+        git.add('.')
+        git.commit(message)
+        if git.has_remote('origin') and push:
+            git.push()
+
+    def load_plugins(self):
+        names = [p.name for p in self.plugins]
+        for plugin_name in (self._base_path / self._app_name).iterdir():
+            if plugin_name not in names:
+                self.plugins.append(Plugin(self, plugin_name))
 
     def _load(self) -> dict:
         '''
@@ -92,7 +135,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
         :rtype: dict
         '''
         try:
-            with open(self._config_path, 'r') as fp:
+            with open(self.config_path, 'r') as fp:
                 data = self._SERIALIZER.loads(fp.read())
         except FileNotFoundError:
             data = dict()

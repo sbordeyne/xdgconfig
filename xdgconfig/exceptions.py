@@ -1,0 +1,6 @@
+class XDGConfigError(Exception):
+    ...
+
+
+class GitNotFound(XDGConfigError):
+    ...

@@ -31,6 +31,7 @@ lxml = "^4.6.2"
 recommonmark = "^0.7.1"
 Sphinx = "^3.5.1"
 sphinx-rtd-theme = "^0.5.1"
+pylama = "^7.7.1"
 
 [tool.poetry.extras]
 jsonc = ["commentjson"]
