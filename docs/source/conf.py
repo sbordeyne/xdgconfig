@@ -16,7 +16,7 @@ import pathlib
 
 import sphinx_rtd_theme
 
-sys.path.insert(0, str(pathlib.Path(__file__).parent))
+sys.path.insert(0, str(pathlib.Path(__file__).parent.parent.parent))
 
 # -- Project information -----------------------------------------------------
 
@@ -25,7 +25,7 @@ copyright = '2021, Dogeek'
 author = 'Dogeek'
 
 # The full version, including alpha/beta/rc tags
-with open('../pyproject.toml') as f:
+with open(pathlib.Path(__file__).parent.parent.parent / 'pyproject.toml') as f:
     release = re.search(
         r'^ *version ?= ?"(?P<version>.+?)"$',
         f.read(), flags=re.DOTALL | re.MULTILINE,
