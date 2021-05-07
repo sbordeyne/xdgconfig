@@ -7,7 +7,7 @@ from xdgconfig.exceptions import GitNotFound
 
 class Git:
     def __init__(self, path: pathlib.Path):
-        self.cwd: pathlib.Path = pathlib.Path(os.getcwd()).resolve()
+        self.cwd: pathlib.Path = pathlib.Path.cwd().resolve()
         self.path = path
         try:
             subprocess.call(['git', '--version'])
@@ -33,4 +33,11 @@ class Git:
         os.chdir(self.path)
         out: str = subprocess.check_output(['git', 'remote'])
         os.chdir(self.cwd)
-        return remote in out
+        return remote in out.decode('utf8')
+
+    @property
+    def status(self) -> str:
+        os.chdir(self.path)
+        out: str = subprocess.check_output(['git', 'status'])
+        os.chdir(self.cwd)
+        return out.decode('utf8')

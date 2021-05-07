@@ -50,8 +50,7 @@ class Config(defaultdict, metaclass=ConfigMeta):
         self._config_name = config_name
         self._autosave = autosave
         self._parent = None
-        self._local = LocalConfig()
-        self._local._SERIALIZER = self._SERIALIZER
+        self._local = None
 
         self.plugins = []
 
@@ -74,6 +73,13 @@ class Config(defaultdict, metaclass=ConfigMeta):
         :rtype: pathlib.Path
         '''
         raise NotImplementedError()
+
+    def _setup_local_config(self):
+        self._local = LocalConfig(
+            f'.{self._app_name}', self._config_name,
+            autosave=self._autosave
+        )
+        self._local._SERIALIZER = self._SERIALIZER
 
     @property
     def is_git_repo(self):
@@ -177,23 +183,9 @@ class Config(defaultdict, metaclass=ConfigMeta):
 
 
 class LocalConfig(Config):
-    def __init__(
-        self, config_name: str = 'config', *,
-        autosave: bool = True
-    ) -> None:
-        '''
-        Represents a configuration file in the current working directory.
-
-        :param config_name: the name of the config, defaults to 'config'
-        :type config_name: str, optional
-        :param autosave: Whether to save the config automatically on mutation, defaults to True
-        :type autosave: bool, optional
-        '''
-        super().__init__(
-            '.' + self._base_path.name,
-            config_name, autosave=autosave
-        )
-
     @property
     def _base_path(self):
         return pathlib.Path.cwd().resolve()
+
+    def _setup_local_config(self):
+        return
