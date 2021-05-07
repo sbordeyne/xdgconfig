@@ -11,11 +11,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import sys
+import re
 
-sys.path.insert(0, os.path.abspath('..'))
 import sphinx_rtd_theme
-import xdgconfig
 
 
 # -- Project information -----------------------------------------------------
@@ -25,8 +23,13 @@ copyright = '2021, Dogeek'
 author = 'Dogeek'
 
 # The full version, including alpha/beta/rc tags
-release = xdgconfig.__version__
+with open('../pyproject.toml') as f:
+    release = re.search(
+        r'^ *version ?= ?"(?P<version>.+?)"$',
+        f.read(), flags=re.DOTALL | re.MULTILINE,
+    )
 
+release = release.groupdict().get('version', '1.0.0')
 
 # -- General configuration ---------------------------------------------------
 
