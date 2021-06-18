@@ -21,6 +21,18 @@ class defaultdict(dict):
         self._parent = parent
         self._DEFAULTS = defaults
 
+    def __setitem__(self, key: str, value: Any):
+        if '.' in key:
+            k, *rest = key.split('.')
+            if k not in self:
+                self[k] = defaultdict(
+                    self._default(k), _parent=key,
+                    _defaults=self._DEFAULTS
+                )
+            self[k]['.'.join(rest)] = value
+            return
+        super().__setitem__(key, value)
+
     def __getitem__(self, key: str) -> Any:
         if key not in self and '.' not in key:
             default = self._default(key)
@@ -36,7 +48,6 @@ class defaultdict(dict):
             self[key] = default
         if '.' in key:
             k, *rest = key.split('.')
-            print(key, k, rest)
             return self[k]['.'.join(rest)]
         return super().__getitem__(key)
 
@@ -58,3 +69,13 @@ class defaultdict(dict):
                 _parent=path, _defaults=self._DEFAULTS,
             )
         )
+
+    def flat(self, parent_key='', sep='.'):
+        items = []
+        for k, v in self.items():
+            new_key = parent_key + sep + k if parent_key else k
+            if isinstance(v, defaultdict):
+                items.extend(v.flat(new_key, sep=sep).items())
+            else:
+                items.append((new_key, v))
+        return dict(items)
