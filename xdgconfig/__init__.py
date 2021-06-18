@@ -39,14 +39,8 @@ if hasattr(mixins, 'XmlMixin'):
     class XmlConfig(mixins.XmlMixin, Config):
         ...
 
-
     class LocalXmlConfig(mixins.XmlMixin, LocalConfig):
         ...
-else:
-    print((
-        'xmltodict is not installed. '
-        'Run pip install xdgconfig[xml] to install it.'
-    ))
 
 if hasattr(mixins, 'YamlMixin'):
     class YamlConfig(mixins.YamlMixin, Config):
@@ -55,21 +49,10 @@ if hasattr(mixins, 'YamlMixin'):
 
     class LocalYamlConfig(mixins.YamlMixin, LocalConfig):
         ...
-else:
-    print((
-        'PyYAML is not installed. '
-        'Run pip install xdgconfig[yaml] to install it.'
-    ))
 
 if hasattr(mixins, 'TomlMixin'):
     class TomlConfig(mixins.TomlMixin, Config):
         ...
 
-
     class LocalTomlConfig(mixins.TomlMixin, LocalConfig):
         ...
-else:
-    print((
-        'TOML is not installed. '
-        'Run pip install xdgconfig[toml] to install it.'
-    ))

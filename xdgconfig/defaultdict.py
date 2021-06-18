@@ -35,7 +35,9 @@ class defaultdict(dict):
                 )
             self[key] = default
         if '.' in key:
-            return self['.'.join(key.split('.')[1:])]
+            k, *rest = key.split('.')
+            print(key, k, rest)
+            return self[k]['.'.join(rest)]
         return super().__getitem__(key)
 
     def _default(self, key: str) -> Any:
