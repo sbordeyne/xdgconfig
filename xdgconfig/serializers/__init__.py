@@ -22,3 +22,6 @@ with contextlib.suppress(ImportError):
 
 with contextlib.suppress(ImportError):
     from xdgconfig.serializers import _yaml as yaml
+
+with contextlib.suppress(ImportError):
+    from xdgconfig.serializers import _python as python

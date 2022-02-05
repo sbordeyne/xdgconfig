@@ -11,14 +11,15 @@ These objects all have the same programming interface, with a few key difference
   - On windows, the configuration is stored in `~/AppData/Roaming/prog/config.ext`, with `prog`, and `config.ext` being set by the initializer of the `Config` object.
   - On UNIX-like systems (`Cygwin`, `MacOS` and `Linux` flavors), the configuration is stored in `~/.config/prog/config.ext`.
 
-There are 5 different serializers available. Limitations may apply to different serializers.
+There are 6 different serializers available. Limitations may apply to different serializers.
 - JSON (JSONC)
 - TOML
 - INI
+- Python files
 - YAML
 - XML
 
-Some serializers may require third-party libraries to work properly. In that case, you can install them using the `extra` syntax (`pip3 install xdgconfig[xml]` for instance). The `json` and `ini` serializers are always available.
+Some serializers may require third-party libraries to work properly. In that case, you can install them using the `extra` syntax (`pip3 install xdgconfig[xml]` for instance). The `json`, `python` and `ini` serializers are always available.
 
 Each `Config` object accesses its values through a dictionary-like interface, for instance:
 
@@ -38,6 +39,20 @@ config['bar']['baz'] = 'tar'
 print(config)
 # Prints {'bar': {'baz': 'tar'}, 'foo': 'bar'}
 ```
+
+### Note about the python serializer :
+
+The python serializer treats the file as a python module, and imports it using `importlib`.
+It's quite powerful as the full python capabilities are available to configure an app, but can
+also be dangerous as the import can run malicious code if that code is in the config file if the
+app has sufficient permissions. It should be used with caution, and for apps not destined to be
+run with root privileges.
+
+The python serializer is also unable to serialize back into python code without significant
+data losses, hence, auto saving, and saving the config is disabled when using that serializer.
+
+Like with all serializers, you still get a dict to play with at the end. Variables starting with a
+leading underscore (`_`) are deemed to be private, and thus are not loaded (or available in the parsed config).
 
 ## Setting default values
 

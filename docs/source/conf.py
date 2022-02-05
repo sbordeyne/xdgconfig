@@ -77,10 +77,12 @@ master_doc = 'index'
 autosummary_generate = True
 autodoc_mock_imports = ['xdgconfig']
 
+
 def skip(app, what, name, obj, would_skip, options):
     if name == "__init__" or name.startswith('_'):
         return False
     return would_skip
+
 
 def setup(app):
     app.connect("autodoc-skip-member", skip)

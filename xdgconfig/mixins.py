@@ -4,7 +4,7 @@ Mixins for xdgconfig.config.Config objects.
 
 import contextlib
 
-from xdgconfig.serializers import ini, json
+from xdgconfig.serializers import ini, json, python
 
 
 __all__ = [
@@ -57,3 +57,10 @@ with contextlib.suppress(ImportError):
         Mixin to use a YAML serializer.
         '''
         _SERIALIZER = yaml
+
+
+class PythonMixin:
+    '''
+    Mixin to serialize config as a python source file.
+    '''
+    _SERIALIZER = python

@@ -30,6 +30,8 @@ Indices and tables
 
 .. autoclass:: xdgconfig.mixins.IniMixin
 
+.. autoclass:: xdgconfig.mixins.PythonMixin
+
 .. autoclass:: xdgconfig.mixins.TomlMixin
 
 .. autoclass:: xdgconfig.mixins.XmlMixin
@@ -45,3 +47,5 @@ Indices and tables
 .. autoclass:: xdgconfig.YamlConfig
 
 .. autoclass:: xdgconfig.IniConfig
+
+.. autoclass:: xdgconfig.PyConfig

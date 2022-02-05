@@ -35,6 +35,16 @@ class LocalIniConfig(mixins.IniMixin, LocalConfig):
     ...
 
 
+class PyConfig(mixins.PythonMixin, Config):
+    def save(self) -> None:
+        return
+
+
+class LocalPyConfig(mixins.PythonMixin, LocalConfig):
+    def save(self) -> None:
+        return
+
+
 if hasattr(mixins, 'XmlMixin'):
     class XmlConfig(mixins.XmlMixin, Config):
         ...
